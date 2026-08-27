@@ -10,12 +10,14 @@
   width: 100%;
   height: auto;
   overflow: visible;
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-family: var(--font-sim);
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .sim-svg text {
-  fill: var(--fg-70);
+  fill: var(--fg);
   user-select: none;
 }
 
@@ -30,8 +32,9 @@
 }
 
 .sim-svg .sim-sub {
-  font-size: 10px;
-  fill: var(--fg-50);
+  font-size: 11px;
+  font-weight: 400;
+  fill: var(--fg-70);
 }
 
 /* nodes */
@@ -45,10 +48,10 @@
     opacity var(--dur) var(--ease-out);
 }
 .sim-node.sim-tone-muted rect {
-  stroke: var(--fg-30);
+  stroke: var(--fg-50);
 }
 .sim-node.sim-tone-muted text {
-  fill: var(--fg-50);
+  fill: var(--fg-70);
 }
 .sim-node.sim-tone-accent-1 rect {
   stroke: var(--accent-1);
@@ -85,8 +88,9 @@
   stroke: var(--accent-2-70);
 }
 .sim-edge-label {
-  font-size: 10px;
-  fill: var(--fg-50);
+  font-size: 11px;
+  font-weight: 400;
+  fill: var(--fg-70);
 }
 
 .sim-node.is-dim {
@@ -94,6 +98,29 @@
 }
 .sim-node {
   transition: opacity var(--dur) var(--ease-out);
+}
+
+/* the main actors of a picture, drawn a step larger than their surroundings */
+.sim-lg text {
+  font-size: 16px;
+}
+.sim-lg .sim-sub {
+  font-size: 12px;
+}
+
+/* something that has just been created in the picture: eases in on mount */
+.sim-appear {
+  animation: sim-appear var(--dur-slow) var(--ease-out) both;
+}
+@keyframes sim-appear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* a group that can be inserted into or removed from the picture */
@@ -115,8 +142,8 @@
   stroke-width: var(--stroke);
 }
 .sim-box text {
-  font-size: 11px;
-  fill: var(--fg-50);
+  font-size: 12px;
+  fill: var(--fg-70);
 }
 .sim-box.is-storage rect {
   fill: none;
@@ -224,9 +251,10 @@
 /* controls */
 .sim-controls {
   margin-top: var(--space-4);
-  font-family: var(--font-mono);
+  font-family: var(--font-sim);
   font-size: var(--fs-sm);
-  color: var(--fg-70);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
 }
 
 .sim-controls-row {
@@ -333,7 +361,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-5);
-  font-family: var(--font-mono);
+  font-family: var(--font-sim);
   font-size: var(--fs-sm);
 }
 .sim-readouts div {
@@ -341,7 +369,7 @@
   gap: var(--space-2);
 }
 .sim-readouts dt {
-  color: var(--fg-50);
+  color: var(--fg-70);
 }
 .sim-readouts dd {
   color: var(--fg);
@@ -355,12 +383,12 @@
 }
 
 .sim-params h3 {
-  font-family: var(--font-mono);
+  font-family: var(--font-sim);
   font-size: var(--fs-xs);
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--fg-50);
+  color: var(--fg-70);
   margin-top: var(--space-3);
 }
 
@@ -376,7 +404,7 @@
   grid-template-columns: minmax(7em, 13em) 1fr 5em;
   align-items: center;
   gap: var(--space-3);
-  font-family: var(--font-mono);
+  font-family: var(--font-sim);
   font-size: var(--fs-sm);
   color: var(--fg-70);
 }

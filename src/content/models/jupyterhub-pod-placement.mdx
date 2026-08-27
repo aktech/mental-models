@@ -1,0 +1,17 @@
+---
+title: Where a user's pods land
+description: A JupyterHub user starts a lab, then a few apps. Today every one of those pods has to sit on the node the first one landed on, because they all mount the same one-node-at-a-time home volume. Make home shareable and each pod picks its own node.
+order: 3
+background: This is an effort to fix
+issue: https://github.com/nebari-dev/data-science-pack/issues/221
+---
+import PlacementScene from '../../components/scenes/PlacementScene';
+
+Users on the left, nodes on the right. A user asks for a JupyterLab pod, then for apps one at a time. A second user shows up once the first lab is running. Every request is placed the moment it is made. Watch where each pod goes and what it carries with it.
+
+- **today**: every pod of a user mounts the same `home` and the same `nebi ws` (nebi workspaces) volume. Both are RWO, which means attached to one node at a time. So a hard affinity keeps all of a user's pods on the node their lab landed on. When that node is full the next app waits forever, even with empty nodes next door.
+- **proposed**: each user's `home` is still their own volume, but RWX, so any node can mount it. The lab keeps its RWO `nebi ws` volume, since there is only one lab. Each app gets a throwaway `tmp` directory it fills with `nebi pull` at start. Nothing ties an app to the lab's node any more.
+
+<PlacementScene client:load />
+
+Press play with the defaults. In today mode user 1's second app lands in the pending tray while node-2 and node-3 have room. Switch to proposed and run it again.

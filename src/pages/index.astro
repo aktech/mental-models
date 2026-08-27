@@ -17,6 +17,17 @@ const entries = (await getCollection('models')).sort((a, b) => a.data.order - b.
           <a href={`/models/${entry.id}/`} class="text-[length:var(--fs-lg)] font-medium no-underline">
             {entry.data.title}
           </a>
+          {entry.data.background && (
+            <p class="mt-1" style="color: var(--fg-70)">
+              {entry.data.background}
+              {entry.data.issue && (
+                <>
+                  {' '}
+                  <a href={entry.data.issue}>{entry.data.issue.replace(/^https:\/\/github\.com\//, '').replace(/\/issues\//, '#')}</a>
+                </>
+              )}
+            </p>
+          )}
           <p class="mt-1" style="color: var(--fg-70)">{entry.data.description}</p>
         </li>
       ))

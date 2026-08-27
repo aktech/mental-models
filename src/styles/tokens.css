@@ -30,8 +30,9 @@
 
   /* ---- type ---- */
   --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
-  --font-sans: 'Space Grotesk Variable', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Fira Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-sim: 'Fira Sans', var(--font-sans); /* diagram labels */
 
   --fs-xs: 0.75rem;    /* 12px  mono: diagram labels, counters */
   --fs-sm: 0.875rem;   /* 14px  mono: controls, captions, meta */

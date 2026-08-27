@@ -8,6 +8,10 @@ const models = defineCollection({
     title: z.string(),
     description: z.string(),
     order: z.number().default(0),
+    /** why this entry exists, when it answers a specific problem rather than a general one */
+    background: z.string().optional(),
+    /** the issue or thread it answers */
+    issue: z.string().url().optional(),
   }),
 });
 

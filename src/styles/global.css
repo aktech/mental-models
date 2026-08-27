@@ -102,18 +102,49 @@
 
 /* Site name in the page corner. */
 .site-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   letter-spacing: -0.035em;
   color: var(--fg);
   text-decoration: none;
+}
+.site-mark {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .site-name:hover {
   color: var(--accent-2);
 }
 
 /* Sun in the dark, moon in the light. */
+/* Links in the page corner, beside the theme toggle. */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.site-link {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1.125rem;
+  color: var(--fg-70);
+  text-decoration: none;
+}
+.site-link:hover,
+.site-link[aria-current='page'] {
+  color: var(--fg);
+}
+
 .theme-btn {
   display: grid;
   place-items: center;
@@ -149,6 +180,38 @@
 }
 
 /* Small mono metadata: dates, readouts, control labels. */
+/* Page footer, same wording as the personal site. */
+.site-footer {
+  padding: 0 var(--space-5) var(--space-8);
+  text-align: center;
+}
+.site-footer hr {
+  border: 0;
+  border-top: 1px solid var(--fg-15);
+  margin: var(--space-8) 0 var(--space-5);
+}
+.site-footer p {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-body);
+  color: var(--fg-70);
+}
+.site-footer-commit {
+  font-family: var(--font-mono);
+  opacity: 0.6;
+}
+
+/* Background note under an entry's lead: a plain quote in the body type. */
+.prose blockquote.background {
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  font-style: normal;
+  line-height: var(--lh-body);
+  color: var(--fg-70);
+  margin: var(--space-5) 0 var(--space-6);
+  padding: var(--space-2) 0 var(--space-2) var(--space-5);
+  border-left: 4px solid var(--fg-30);
+}
+
 .meta {
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
