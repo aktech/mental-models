@@ -8,6 +8,7 @@ import '@fontsource/fira-sans/500.css';
 import '@fontsource/fira-sans/600.css';
 import '../styles/global.css';
 import { withBase } from '../lib/url';
+import { ogPages, ogSlugForPath, SITE_NAME, SITE_TAGLINE } from '../lib/pages';
 
 const commit = __COMMIT__;
 
@@ -17,6 +18,16 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+
+// Social card and canonical URL for this page. Pages without their own card
+// (styleguide, lab) fall back to the site card.
+const cards = await ogPages();
+const wanted = ogSlugForPath(Astro.url.pathname, import.meta.env.BASE_URL);
+const ogSlug = cards.some((c) => c.slug === wanted) ? wanted : 'index';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(withBase(`/og/${ogSlug}.png`), Astro.site);
+const metaDescription = description ?? SITE_TAGLINE;
+const isEntry = Astro.url.pathname.includes('/models/');
 ---
 
 <!doctype html>
@@ -27,7 +38,21 @@ const { title, description } = Astro.props;
     <meta name="color-scheme" content="light dark" />
     <title>{title}</title>
     <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
-    {description && <meta name="description" content={description} />}
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={isEntry ? 'article' : 'website'} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
     <script is:inline>
       // Resolve the theme before first paint: an explicit choice wins,
       // otherwise follow the OS. The toggle button and the CSS both read
