@@ -1,0 +1,400 @@
+/* Diagram + control styling. Colours and type come from tokens.css. */
+
+.sim {
+  margin: var(--space-7) 0;
+  container-type: inline-size;
+}
+
+.sim-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+
+.sim-svg text {
+  fill: var(--fg-70);
+  user-select: none;
+}
+
+/* labels that may cross a line get a halo in the page colour, so they stay legible with no box */
+.sim-edge-label,
+.sim-marker text,
+.sim-counter {
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.sim-svg .sim-sub {
+  font-size: 10px;
+  fill: var(--fg-50);
+}
+
+/* nodes */
+.sim-node rect {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: var(--stroke);
+  transition:
+    stroke var(--dur) var(--ease-out),
+    fill var(--dur) var(--ease-out),
+    opacity var(--dur) var(--ease-out);
+}
+.sim-node.sim-tone-muted rect {
+  stroke: var(--fg-30);
+}
+.sim-node.sim-tone-muted text {
+  fill: var(--fg-50);
+}
+.sim-node.sim-tone-accent-1 rect {
+  stroke: var(--accent-1);
+}
+.sim-node.sim-tone-accent-1 text {
+  fill: var(--accent-1);
+}
+.sim-node.sim-tone-accent-2 rect {
+  stroke: var(--accent-2);
+}
+.sim-node.sim-tone-accent-2 text {
+  fill: var(--accent-2);
+}
+.sim-node.is-filled.sim-tone-accent-1 rect {
+  fill: var(--accent-1-15);
+}
+.sim-node.is-filled.sim-tone-accent-2 rect {
+  fill: var(--accent-2-15);
+}
+
+/* edges */
+.sim-edge line {
+  stroke: var(--fg-30);
+  stroke-width: var(--stroke);
+  transition: stroke var(--dur) var(--ease-out);
+}
+.sim-edge.sim-tone-default line {
+  stroke: var(--fg);
+}
+.sim-edge.sim-tone-accent-1 line {
+  stroke: var(--accent-1-70);
+}
+.sim-edge.sim-tone-accent-2 line {
+  stroke: var(--accent-2-70);
+}
+.sim-edge-label {
+  font-size: 10px;
+  fill: var(--fg-50);
+}
+
+.sim-node.is-dim {
+  opacity: 0.35;
+}
+.sim-node {
+  transition: opacity var(--dur) var(--ease-out);
+}
+
+/* a group that can be inserted into or removed from the picture */
+.sim-tier {
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+.sim-tier.is-hidden {
+  opacity: 0;
+  transform: translateY(-14px);
+  pointer-events: none;
+}
+
+/* a machine boundary: anything that crosses it is a network hop */
+.sim-box rect {
+  fill: var(--fg-8);
+  stroke: var(--fg-15);
+  stroke-width: var(--stroke);
+}
+.sim-box text {
+  font-size: 11px;
+  fill: var(--fg-50);
+}
+.sim-box.is-storage rect {
+  fill: none;
+  stroke-dasharray: 2 3;
+}
+
+/* sequence-diagram pieces */
+.sim-lifeline {
+  stroke: var(--fg-15);
+  stroke-width: var(--stroke);
+}
+.sim-tick line {
+  stroke: var(--fg-8);
+  stroke-width: var(--stroke);
+}
+.sim-tick text {
+  font-size: 11px;
+  fill: var(--fg-50);
+}
+.sim-message line {
+  stroke: var(--fg-30);
+  stroke-width: var(--stroke);
+}
+.sim-message.sim-tone-accent-2 line {
+  stroke: var(--accent-2-70);
+}
+.sim-message.sim-tone-muted line {
+  stroke: var(--fg-15);
+  stroke-dasharray: 2 3;
+}
+.sim-activation {
+  fill: var(--accent-2-15);
+  stroke: var(--accent-2);
+  stroke-width: var(--stroke);
+}
+.sim-activation.is-waiting {
+  fill: var(--fg-8);
+  stroke: var(--fg-30);
+}
+.sim-sweep line {
+  stroke: var(--accent-1);
+  stroke-width: var(--stroke);
+}
+.sim-svg[data-motion='tween'] .sim-sweep {
+  transition: transform var(--dur) var(--ease-out);
+}
+.sim-marker line {
+  stroke: var(--fg-15);
+  stroke-width: var(--stroke);
+  stroke-dasharray: 2 3;
+  transition: stroke var(--dur) var(--ease-out);
+}
+.sim-marker text {
+  font-size: 11px;
+  fill: var(--fg-50);
+  transition: fill var(--dur) var(--ease-out);
+}
+.sim-marker.is-reached line {
+  stroke: var(--accent-2);
+}
+.sim-marker.is-reached text {
+  fill: var(--accent-2);
+}
+.sim-svg[data-motion='tween'] .sim-marker {
+  transition: transform var(--dur) var(--ease-out);
+}
+.sim-header {
+  fill: var(--fg);
+}
+.sim-header.sim-tone-muted {
+  fill: var(--fg-50);
+}
+
+/* packets: positioned by transform from the clock; tween only on a step */
+.sim-packet circle {
+  fill: var(--accent-1);
+}
+.sim-packet.sim-tone-accent-2 circle {
+  fill: var(--accent-2);
+}
+.sim-packet.sim-tone-muted circle {
+  fill: var(--fg-50);
+}
+.sim-svg[data-motion='tween'] .sim-packet {
+  transition: transform var(--dur) var(--ease-out);
+}
+
+/* counters */
+.sim-counter {
+  font-size: var(--fs-xs);
+}
+.sim-counter-label {
+  fill: var(--fg-50);
+}
+.sim-counter-value {
+  fill: var(--fg);
+}
+.sim-counter.sim-tone-accent-1 .sim-counter-value {
+  fill: var(--accent-1);
+}
+.sim-counter.sim-tone-accent-2 .sim-counter-value {
+  fill: var(--accent-2);
+}
+
+/* controls */
+.sim-controls {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--fg-70);
+}
+
+.sim-controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.sim-btn {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: var(--stroke) solid var(--fg-15);
+  border-radius: var(--radius);
+  padding: 0.15em 0.6em;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+.sim-btn:hover:not(:disabled) {
+  border-color: var(--fg-50);
+  color: var(--fg);
+}
+.sim-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.sim-btn[aria-pressed='true'] {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+.sim-speed {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.sim-readout {
+  margin-left: auto;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* range inputs: a 1px track and a small round thumb, no chrome */
+.sim-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  margin: 0;
+  cursor: pointer;
+}
+.sim-range:disabled {
+  cursor: default;
+}
+.sim-range::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--fg-30);
+}
+.sim-range::-moz-range-track {
+  height: 1px;
+  background: var(--fg-30);
+}
+.sim-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -5.5px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: var(--stroke) solid var(--fg);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.sim-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: var(--stroke) solid var(--fg);
+}
+.sim-range:hover:not(:disabled)::-webkit-slider-thumb,
+.sim-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--accent-2);
+}
+.sim-range:hover:not(:disabled)::-moz-range-thumb,
+.sim-range:focus-visible::-moz-range-thumb {
+  border-color: var(--accent-2);
+}
+.sim-range:focus-visible {
+  outline: none;
+}
+.sim-scrubber {
+  margin-top: var(--space-2);
+}
+
+/* readouts: live facts about the current instant */
+.sim-readouts {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+.sim-readouts div {
+  display: flex;
+  gap: var(--space-2);
+}
+.sim-readouts dt {
+  color: var(--fg-50);
+}
+.sim-readouts dd {
+  color: var(--fg);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-choice {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.sim-params h3 {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-50);
+  margin-top: var(--space-3);
+}
+
+/* parameters */
+.sim-params {
+  margin-top: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.sim-param {
+  display: grid;
+  grid-template-columns: minmax(7em, 13em) 1fr 5em;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--fg-70);
+}
+.sim-param.is-disabled {
+  opacity: 0.4;
+}
+.sim-param-value {
+  text-align: right;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* keyed off the figure's own width, so a narrow column in a wide window still stacks */
+@container (max-width: 480px) {
+  .sim-param {
+    grid-template-columns: 1fr 4.5em;
+  }
+  .sim-param-label {
+    grid-column: 1 / -1;
+  }
+}

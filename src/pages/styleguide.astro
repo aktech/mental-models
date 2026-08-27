@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { contrastRatio } from '../lib/contrast';
+
+// Same hex values as tokens.css. Contrast is computed, not asserted by hand.
+const themes = [
+  { name: 'light', bg: '#f6f3ec', fg: '#1c1b19', a1: '#b54314', a2: '#1f5c86' },
+  { name: 'dark', bg: '#171614', fg: '#eae6de', a1: '#f0895a', a2: '#7fb3df' },
+] as const;
+
+const steps = [70, 50, 30, 15, 8] as const;
+const accentSteps = [70, 40, 15] as const;
+---
+
+<BaseLayout title="Styleguide" description="Type scale, palette and diagram primitives.">
+  <div class="prose mx-auto">
+    <p class="meta">styleguide</p>
+
+    <h1 class="text-[length:var(--fs-2xl)]">Why your write waits for the slowest disk</h1>
+    <p class="meta">h1 · Space Grotesk 500 · var(--fs-2xl) = clamp(36px, 52px) · lh 1.1</p>
+
+    <p class="lead">
+      A write is only as fast as the k-th replica to answer, and k is a number you chose.
+    </p>
+    <p class="meta">lead · Space Grotesk · 22px · lh 1.4 · fg 70%</p>
+
+    <p>
+      The coordinator sends the write to every replica at once. Each replica has its own
+      disk, its own queue, and its own idea of how long a fsync takes. The client is not
+      waiting for the average of those. It is waiting for a specific one: the last replica
+      whose acknowledgement it still needs.
+    </p>
+    <p class="meta">body · Space Grotesk · 18px · lh 1.7 · measure 68ch</p>
+
+    <h2>The k-th fastest, not the mean</h2>
+    <p class="meta">h2 · Space Grotesk 500 · 28px</p>
+
+    <blockquote>One slow disk poisons everything when you need all of the acks.</blockquote>
+    <p class="meta">pull quote · Instrument Serif italic · 28px · 1px accent rule</p>
+
+    <p>
+      Inside a diagram everything is mono: <code>replica-3</code>, <code>t = 1 240 ms</code>, <code>acks 2/3</code>.
+    </p>
+    <p class="meta">inline mono · Geist Mono · 0.9em of parent</p>
+
+    <p class="meta" style="font-size: var(--fs-xs)">diagram label · Geist Mono · 12px · fg 50%</p>
+    <p class="meta">control label · Geist Mono · 14px · fg 50%</p>
+
+    <h2>Palette</h2>
+    <p>
+      Four colours. Every other tint is an opacity step of one of them. The number under each
+      swatch is its WCAG contrast against the theme background.
+    </p>
+  </div>
+
+  {
+    themes.map((t) => (
+      <section
+        data-theme={t.name}
+        class="mt-8 py-8"
+        style="background: var(--bg); color: var(--fg)"
+      >
+        <div class="prose mx-auto px-5">
+          <p class="meta">{t.name}</p>
+          <div class="mt-4 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">
+            <div>
+              <div class="h-16 rounded-[var(--radius)]" style="background: var(--fg)" />
+              <p class="meta mt-2">fg {t.fg}</p>
+              <p class="meta">{contrastRatio(t.fg, t.bg).toFixed(2)}:1</p>
+            </div>
+            <div>
+              <div class="h-16 rounded-[var(--radius)] border" style="background: var(--bg); border-color: var(--fg-15)" />
+              <p class="meta mt-2">bg {t.bg}</p>
+              <p class="meta">1.00:1</p>
+            </div>
+            <div>
+              <div class="h-16 rounded-[var(--radius)]" style="background: var(--accent-1)" />
+              <p class="meta mt-2">accent-1 {t.a1}</p>
+              <p class="meta">{contrastRatio(t.a1, t.bg).toFixed(2)}:1</p>
+            </div>
+            <div>
+              <div class="h-16 rounded-[var(--radius)]" style="background: var(--accent-2)" />
+              <p class="meta mt-2">accent-2 {t.a2}</p>
+              <p class="meta">{contrastRatio(t.a2, t.bg).toFixed(2)}:1</p>
+            </div>
+          </div>
+
+          <p class="meta mt-8">opacity steps</p>
+          <div class="mt-2 grid grid-cols-3 gap-4">
+            <div>
+              <div class="flex gap-1">
+                {steps.map((s) => (
+                  <div class="h-10 flex-1 rounded-[var(--radius)]" style={`background: var(--fg-${s})`} />
+                ))}
+              </div>
+              <p class="meta mt-2">fg 70 50 30 15 8</p>
+            </div>
+            <div>
+              <div class="flex gap-1">
+                {accentSteps.map((s) => (
+                  <div class="h-10 flex-1 rounded-[var(--radius)]" style={`background: var(--accent-1-${s})`} />
+                ))}
+              </div>
+              <p class="meta mt-2">accent-1 70 40 15</p>
+            </div>
+            <div>
+              <div class="flex gap-1">
+                {accentSteps.map((s) => (
+                  <div class="h-10 flex-1 rounded-[var(--radius)]" style={`background: var(--accent-2-${s})`} />
+                ))}
+              </div>
+              <p class="meta mt-2">accent-2 70 40 15</p>
+            </div>
+          </div>
+
+          <p class="meta mt-8">diagram primitives · 1px strokes · 4px radius · mono labels</p>
+          <svg viewBox="0 0 560 120" class="mt-2 w-full" role="img" aria-label="Sample diagram: client, coordinator, three replicas">
+            <g font-family="var(--font-mono)" font-size="12" fill="var(--fg-70)">
+              <rect x="8" y="44" width="96" height="32" rx="4" fill="none" stroke="var(--fg)" stroke-width="1" />
+              <text x="56" y="64" text-anchor="middle">client</text>
+
+              <line x1="104" y1="60" x2="200" y2="60" stroke="var(--fg-30)" stroke-width="1" />
+              <circle cx="152" cy="60" r="4" fill="var(--accent-1)" />
+
+              <rect x="200" y="44" width="112" height="32" rx="4" fill="none" stroke="var(--fg)" stroke-width="1" />
+              <text x="256" y="64" text-anchor="middle">coordinator</text>
+
+              <line x1="312" y1="60" x2="432" y2="20" stroke="var(--fg-30)" stroke-width="1" />
+              <line x1="312" y1="60" x2="432" y2="60" stroke="var(--fg-30)" stroke-width="1" />
+              <line x1="312" y1="60" x2="432" y2="100" stroke="var(--fg-30)" stroke-width="1" />
+
+              <rect x="432" y="4" width="112" height="32" rx="4" fill="var(--accent-2-15)" stroke="var(--accent-2)" stroke-width="1" />
+              <text x="488" y="24" text-anchor="middle" fill="var(--accent-2)">replica-1 ✓</text>
+
+              <rect x="432" y="44" width="112" height="32" rx="4" fill="var(--accent-2-15)" stroke="var(--accent-2)" stroke-width="1" />
+              <text x="488" y="64" text-anchor="middle" fill="var(--accent-2)">replica-2 ✓</text>
+
+              <rect x="432" y="84" width="112" height="32" rx="4" fill="none" stroke="var(--fg-30)" stroke-width="1" />
+              <text x="488" y="104" text-anchor="middle" fill="var(--fg-50)">replica-3</text>
+
+              <line x1="8" y1="112" x2="420" y2="112" stroke="var(--accent-1-40)" stroke-width="1" stroke-dasharray="2 3" />
+              <text x="8" y="106" font-size="11" fill="var(--fg-50)">t = 1 240 ms · acks 2/3</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+    ))
+  }
+
+  <div class="prose mx-auto mt-12">
+    <h2>Spacing, shape, motion</h2>
+    <p class="meta">space 4 8 12 16 24 32 48 64 96 · radius 4 / 6 · stroke 1 / 0.75</p>
+    <p class="meta">motion 200 / 300 / 400 ms · cubic-bezier(0.22, 1, 0.36, 1) · 0 ms under prefers-reduced-motion</p>
+    <div class="mt-4 flex items-end gap-2">
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+        <div class="w-6 rounded-[var(--radius)]" style={`height: var(--space-${n}); background: var(--fg-30)`} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

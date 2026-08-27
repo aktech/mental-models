@@ -1,0 +1,18 @@
+---
+title: Why your write waits for the slowest disk
+description: A replicated write returns when the k-th fastest replica answers. Not the average one, and if you need every ack, the slowest one.
+order: 1
+---
+import QuorumWriteScene from '../../components/scenes/QuorumWriteScene';
+
+One client, one coordinator, a handful of replicas. The client sends a write. The coordinator fans it out to every replica at once. Each replica writes to its own disk, at its own speed, and sends an ack back. The coordinator replies to the client as soon as it holds the number of acks you asked for.
+
+Time runs downward. The orange line is now.
+
+<QuorumWriteScene client:load />
+
+## Where the wait comes from
+
+Sort the replicas by how long they take. The write returns when the k-th one on that list answers, where k is the acks you required. Nothing else about the other replicas matters: not their average, not how many of them are fast.
+
+That is the whole mechanism. Try moving one disk slider a long way while leaving acks at 2 of 3, then do the same with acks at 3 of 3.

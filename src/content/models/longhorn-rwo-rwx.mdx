@@ -1,0 +1,19 @@
+---
+title: One filesystem, many writers
+description: A Longhorn volume is the same engine and the same three replicas in RWO and RWX. The modes differ only in which node runs the filesystem, and who has to cross the network to reach it.
+order: 2
+---
+import LonghornScene from '../../components/scenes/LonghornScene';
+
+Three nodes. Pods land on them round-robin. Each node also holds one replica of the volume: a plain file on that node's disk, never mounted by anything. One engine owns the volume. It exposes a block device (blocks, not files), fans every write to all three replicas, and waits for all three. That is the [replicated write from the previous entry](/models/quorum-write/) with acks required set to everything.
+
+The engine runs wherever the filesystem runs. That is the only thing the access mode decides.
+
+- **RWO**: the filesystem is mounted on the writing pod's node, so the engine runs there too. Pod to engine is a function call. Pods on other nodes cannot attach at all.
+- **RWX**: a share manager pod mounts the one filesystem on its own node and the engine runs there. Every pod, whichever node it is on, reaches it over NFS, and the share manager serves one write at a time.
+
+Lines that cross from one box to another are network hops. Count them.
+
+<LonghornScene client:load />
+
+Every attached pod issues one write at t = 0. Switch modes and watch which lines cross a box boundary. Then turn on dedicated storage nodes, which is what you give up when replicas stop living next to the engine.

@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import IndexLayout from '../layouts/IndexLayout.astro';
+
+const entries = (await getCollection('models')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<IndexLayout title="Mental models" description="Short explanations of technical concepts, each with one interactive model.">
+  <h1 class="text-[length:var(--fs-2xl)]">Mental models</h1>
+  <p class="lead">
+    Short explanations of how systems behave, each with one simulation you can poke at.
+  </p>
+  <ol class="list-none p-0">
+    {
+      entries.map((entry) => (
+        <li class="border-t py-5" style="border-color: var(--fg-15)">
+          <a href={`/models/${entry.id}/`} class="text-[length:var(--fs-lg)] font-medium no-underline">
+            {entry.data.title}
+          </a>
+          <p class="mt-1" style="color: var(--fg-70)">{entry.data.description}</p>
+        </li>
+      ))
+    }
+  </ol>
+</IndexLayout>

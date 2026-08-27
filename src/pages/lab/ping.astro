@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PingScene from '../../components/scenes/PingScene';
+---
+
+<BaseLayout title="Lab: ping" description="Test scene for the simulation hook and control bar.">
+  <div class="prose mx-auto">
+    <p class="meta">lab</p>
+    <h1 class="text-[length:var(--fs-2xl)]">Ping</h1>
+    <p class="lead">
+      The smallest possible scene: one request, one reply. It exists to exercise the clock,
+      the stepper and the scrubber before anything real sits on top of them.
+    </p>
+    <PingScene client:load />
+    <p>
+      Drag either slider while the picture is paused mid-flight. The dot stays at the same
+      instant of virtual time and the geometry updates around it, because the frame is looked
+      up from a rerun trace, not tweened from where it was.
+    </p>
+  </div>
+</BaseLayout>

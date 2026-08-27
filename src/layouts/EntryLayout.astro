@@ -1,0 +1,19 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="prose mx-auto">
+    <p class="meta">mental model</p>
+    <h1 class="text-[length:var(--fs-2xl)]">{title}</h1>
+    <p class="lead">{description}</p>
+    <slot />
+  </article>
+</BaseLayout>

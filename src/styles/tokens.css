@@ -1,0 +1,87 @@
+/*
+  Design tokens. One warm off-white, one near-black, two accent hues.
+  Everything else is an opacity step of those four.
+  light-dark() picks the value from the element's color-scheme, so a
+  [data-theme] attribute anywhere in the tree switches its subtree.
+*/
+
+:root {
+  color-scheme: light dark;
+
+  /* ---- colour ---- */
+  --bg: light-dark(#f6f3ec, #171614);
+  --fg: light-dark(#1c1b19, #eae6de);
+  --accent-1: light-dark(#b54314, #f0895a); /* ember: the thing in flight */
+  --accent-2: light-dark(#1f5c86, #7fb3df); /* tide: the thing at rest, acknowledged */
+
+  --fg-70: color-mix(in srgb, var(--fg) 70%, transparent);
+  --fg-50: color-mix(in srgb, var(--fg) 50%, transparent);
+  --fg-30: color-mix(in srgb, var(--fg) 30%, transparent);
+  --fg-15: color-mix(in srgb, var(--fg) 15%, transparent);
+  --fg-8: color-mix(in srgb, var(--fg) 8%, transparent);
+
+  --accent-1-70: color-mix(in srgb, var(--accent-1) 70%, transparent);
+  --accent-1-40: color-mix(in srgb, var(--accent-1) 40%, transparent);
+  --accent-1-15: color-mix(in srgb, var(--accent-1) 15%, transparent);
+
+  --accent-2-70: color-mix(in srgb, var(--accent-2) 70%, transparent);
+  --accent-2-40: color-mix(in srgb, var(--accent-2) 40%, transparent);
+  --accent-2-15: color-mix(in srgb, var(--accent-2) 15%, transparent);
+
+  /* ---- type ---- */
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
+  --font-sans: 'Space Grotesk Variable', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-xs: 0.75rem;    /* 12px  mono: diagram labels, counters */
+  --fs-sm: 0.875rem;   /* 14px  mono: controls, captions, meta */
+  --fs-md: 1.125rem;   /* 18px  body */
+  --fs-lg: 1.375rem;   /* 22px  lead paragraph */
+  --fs-xl: 1.75rem;    /* 28px  h2, pull quote */
+  --fs-2xl: clamp(2.25rem, 1.6rem + 2.6vw, 3.25rem); /* 36-52px entry title */
+
+  --lh-tight: 1.1;
+  --lh-snug: 1.4;
+  --lh-body: 1.7;
+
+  --measure: 68ch;
+
+  /* ---- space ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  /* ---- shape ---- */
+  --radius: 4px;
+  --radius-lg: 6px;
+  --stroke: 1px;
+  --stroke-thin: 0.75px;
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 200ms;
+  --dur: 300ms;
+  --dur-slow: 400ms;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+}

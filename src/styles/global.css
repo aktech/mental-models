@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-body);
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background: var(--accent-2-40);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    line-height: var(--lh-tight);
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--fg-30);
+    text-underline-offset: 0.18em;
+    transition: text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+
+  a:hover {
+    text-decoration-color: var(--accent-1);
+  }
+
+  :focus-visible {
+    outline: var(--stroke) solid var(--accent-2);
+    outline-offset: 3px;
+    border-radius: var(--radius);
+  }
+
+  code,
+  kbd,
+  samp {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+}
+
+/* The reading column. Tailwind handles layout around it; this is the measure. */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > * + * {
+  margin-top: var(--space-5);
+}
+
+.prose ul:not(.list-none),
+.prose ol:not(.list-none) {
+  padding-left: 1.2em;
+}
+.prose li + li {
+  margin-top: var(--space-2);
+}
+.prose strong {
+  font-weight: 600;
+}
+
+.prose h2 {
+  font-size: var(--fs-xl);
+  margin-top: var(--space-8);
+}
+
+.prose .lead {
+  font-size: var(--fs-lg);
+  line-height: var(--lh-snug);
+  color: var(--fg-70);
+}
+
+.prose blockquote {
+  font-family: var(--font-serif);
+  font-size: var(--fs-xl);
+  line-height: 1.3;
+  font-style: italic;
+  padding-left: var(--space-5);
+  border-left: var(--stroke) solid var(--accent-1);
+}
+
+/* Small mono metadata: dates, readouts, control labels. */
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--fg-50);
+  letter-spacing: 0.01em;
+}
