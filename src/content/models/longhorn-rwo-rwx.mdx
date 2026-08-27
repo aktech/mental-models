@@ -5,7 +5,7 @@ order: 2
 ---
 import LonghornScene from '../../components/scenes/LonghornScene';
 
-Three nodes. Pods land on them round-robin. Each node also holds one replica of the volume: a plain file on that node's disk, never mounted by anything. One engine owns the volume. It exposes a block device (blocks, not files), fans every write to all three replicas, and waits for all three. That is the [replicated write from the previous entry](/models/quorum-write/) with acks required set to everything.
+Three nodes. Pods land on them round-robin. Each node also holds one replica of the volume: a plain file on that node's disk, never mounted by anything. One engine owns the volume. It exposes a block device (blocks, not files), fans every write to all three replicas, and waits for all three. That is the [replicated write from the previous entry](../quorum-write/) with acks required set to everything.
 
 The engine runs wherever the filesystem runs. That is the only thing the access mode decides.
 

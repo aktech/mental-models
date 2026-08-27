@@ -11,6 +11,9 @@ try {
 } catch {}
 
 export default defineConfig({
+  // Served as a project site under the user site's domain: iamit.in/mental-models/
+  site: 'https://iamit.in',
+  base: '/mental-models',
   integrations: [react(), mdx()],
   vite: {
     plugins: [tailwindcss()],

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import IndexLayout from '../layouts/IndexLayout.astro';
+import { withBase } from '../lib/url';
 
 const entries = (await getCollection('models')).sort((a, b) => a.data.order - b.data.order);
 ---
@@ -14,7 +15,7 @@ const entries = (await getCollection('models')).sort((a, b) => a.data.order - b.
     {
       entries.map((entry) => (
         <li class="border-t py-5" style="border-color: var(--fg-15)">
-          <a href={`/models/${entry.id}/`} class="text-[length:var(--fs-lg)] font-medium no-underline">
+          <a href={withBase(`/models/${entry.id}/`)} class="text-[length:var(--fs-lg)] font-medium no-underline">
             {entry.data.title}
           </a>
           {entry.data.background && (
