@@ -96,6 +96,19 @@
   border-left: var(--stroke) solid var(--accent-1);
 }
 
+/* Site name in the page corner. */
+.site-name {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-decoration: none;
+}
+.site-name:hover {
+  color: var(--accent-1);
+}
+
 /* Small mono metadata: dates, readouts, control labels. */
 .meta {
   font-family: var(--font-mono);
