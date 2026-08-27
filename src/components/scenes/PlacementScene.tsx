@@ -70,35 +70,44 @@ export default function PlacementScene() {
   const final = sim.trace.frames[sim.trace.frames.length - 1]!.state;
   const proposed = mode === 'proposed';
 
-  // geometry: user column | lane | node boxes
-  const userW = Math.max(120, Math.min(180, Math.round(width * 0.22)));
-  const nodesX = userW + LANE;
+  // geometry. Wide: user column | lane | node boxes. Narrow (phones): users
+  // in a row across the top, nodes full width underneath.
+  const stacked = width < 640;
+  const userH = LABEL_H + (1 + apps) * (ACTION_H + ACTION_GAP) + PAD;
+  const userW = stacked ? (width - GAP * (users - 1)) / users : Math.max(120, Math.min(180, Math.round(width * 0.22)));
+  const userX = (u: number) => (stacked ? u * (userW + GAP) : 0);
+  const userY = (u: number) => (stacked ? 0 : u * (userH + GAP));
+  const usersH = stacked ? userH : users * (userH + GAP) - GAP;
+
+  const nodesX = stacked ? 0 : userW + LANE;
+  const nodesY = stacked ? userH + 28 : 0;
   const nodeW = (width - nodesX - GAP * (nodes - 1)) / nodes;
   const nodeX = (n: number) => nodesX + n * (nodeW + GAP);
+  const innerW = nodeW - 2 * PAD;
+  const narrow = innerW < 130;
+  // volume chips sit two to a row, or one when the node is too narrow to fit both labels
+  const chipsPerRow = innerW < 120 ? 1 : CHIPS_PER_ROW;
   // a pod row is tall enough for the most volumes any pod in this run carries
-  const chipRows = Math.ceil(Math.max(...final.pods.map((p) => p.volumes.length), 1) / CHIPS_PER_ROW);
+  const chipRows = Math.ceil(Math.max(...final.pods.map((p) => p.volumes.length), 1) / chipsPerRow);
   const rowH = POD_H + CHIP_GAP + chipRows * CHIP_H + (chipRows - 1) * CHIP_GAP + 14;
   const nodeH = LABEL_H + slots * rowH + PAD;
-  const barY = nodeH + 26;
+  const nodesBottom = nodesY + nodeH;
+  const barY = nodesBottom + 26;
   const barW = (width - nodesX - GAP * (users - 1)) / users;
   const barX = (u: number) => nodesX + u * (barW + GAP);
-  const trayY = (proposed ? barY + BAR_H : nodeH) + 26;
+  const trayY = (proposed ? barY + BAR_H : nodesBottom) + 26;
   const pendingFinal = final.pods.filter((p) => p.status === 'pending');
   const trayH = LABEL_H + Math.max(1, pendingFinal.length) * TRAY_LINE + PAD;
-
-  const userH = LABEL_H + (1 + apps) * (ACTION_H + ACTION_GAP) + PAD;
-  const userY = (u: number) => u * (userH + GAP);
-  const usersH = users * (userH + GAP) - GAP;
   const height = Math.max(usersH, trayY + trayH) + 4;
 
   // every pod's final slot is fixed: pods never leave a node
   const slotOf = (pod: Pod): Rect | null => {
     if (pod.node === null) return null;
     const i = final.pods.filter((p) => p.node === pod.node).findIndex((p) => p.id === pod.id);
-    return { x: nodeX(pod.node) + PAD, y: LABEL_H + i * rowH, w: nodeW - 2 * PAD, h: POD_H };
+    return { x: nodeX(pod.node) + PAD, y: nodesY + LABEL_H + i * rowH, w: innerW, h: POD_H };
   };
   const actionOf = (pod: Pod): Rect => ({
-    x: PAD,
+    x: userX(pod.user) + PAD,
     y: userY(pod.user) + LABEL_H + pod.index * (ACTION_H + ACTION_GAP),
     w: userW - 2 * PAD,
     h: ACTION_H,
@@ -107,9 +116,11 @@ export default function PlacementScene() {
     const i = pendingFinal.findIndex((p) => p.id === pod.id);
     return { x: nodesX + PAD + 14, y: trayY + LABEL_H + i * TRAY_LINE + TRAY_LINE / 2 };
   };
-  const right = (r: Rect): Point => ({ x: r.x + r.w, y: r.y + r.h / 2 });
+  // where a request leaves its user row: the right edge, or the bottom edge when users sit above the nodes
+  const exit = (r: Rect): Point => (stacked ? { x: r.x + r.w / 2, y: r.y + r.h } : { x: r.x + r.w, y: r.y + r.h / 2 });
   const entry = (r: Rect): Point => ({ x: r.x + 12, y: r.y + r.h / 2 });
-  const narrow = nodeW - 2 * PAD < 130;
+  // pending reasons get the short form when there is no room for the long one
+  const reasonOf = (pod: Pod) => (narrow || stacked ? pod.reason?.replace(' · affinity (RWO home)', ' · affinity') : pod.reason);
 
   // pods that have arrived on a node, whether still being built or running
   const placed = now.pods.filter((p) => p.node !== null && p.placedAt !== null);
@@ -130,8 +141,8 @@ export default function PlacementScene() {
         {/* users */}
         {Array.from({ length: users }, (_, u) => (
           <g key={u} className="sim-box">
-            <rect x={0} y={userY(u)} width={userW} height={userH} rx={6} />
-            <text x={PAD} y={userY(u) + 14} dominantBaseline="central">
+            <rect x={userX(u)} y={userY(u)} width={userW} height={userH} rx={6} />
+            <text x={userX(u) + PAD} y={userY(u) + 14} dominantBaseline="central">
               user {u + 1}
             </text>
           </g>
@@ -146,8 +157,8 @@ export default function PlacementScene() {
         {/* nodes */}
         {Array.from({ length: nodes }, (_, n) => (
           <g key={n} className="sim-box">
-            <rect x={nodeX(n)} y={0} width={nodeW} height={nodeH} rx={6} />
-            <text x={nodeX(n) + PAD} y={14} dominantBaseline="central">
+            <rect x={nodeX(n)} y={nodesY} width={nodeW} height={nodeH} rx={6} />
+            <text x={nodeX(n) + PAD} y={nodesY + 14} dominantBaseline="central">
               node-{n + 1}
               {!narrow && ` · ${placed.filter((p) => p.node === n).length}/${slots}`}
             </text>
@@ -162,7 +173,7 @@ export default function PlacementScene() {
                 placed.some((p) => p.node === n && p.user === u && p.attached > 0) ? (
                   <Edge
                     key={`${n}-${u}`}
-                    from={{ x: nodeX(n) + (nodeW * (u + 1)) / (users + 1), y: nodeH }}
+                    from={{ x: nodeX(n) + (nodeW * (u + 1)) / (users + 1), y: nodesBottom }}
                     to={{ x: barX(u) + barW / 2, y: barY }}
                     tone="default"
                     dashed
@@ -192,7 +203,7 @@ export default function PlacementScene() {
                 const mountStart = p.createdAt! + i * ATTACH_MS;
                 const progress = clamp((t - mountStart) / ATTACH_MS);
                 if (progress <= 0) return null;
-                const c = chipRect(s, p.volumes, v.name);
+                const c = chipRect(s, p.volumes, v.name, chipsPerRow);
                 const mounting = i === p.attached && !done;
                 return (
                   <Drawn key={v.name} r={c} rx={4} progress={progress} tone={mounting ? 'accent-1' : v.access === 'rwx' ? 'default' : 'muted'} dashed={v.access === 'ephemeral'} label={VOLUME_LABEL[v.name]} sub={chipAccess(v)} />
@@ -217,7 +228,7 @@ export default function PlacementScene() {
                 u{p.user + 1} {p.kind === 'lab' ? 'lab' : `app ${p.index}`}
               </tspan>
               <tspan className="sim-counter-label" dx="0.6em">
-                {p.reason}
+                {reasonOf(p)}
               </tspan>
             </text>
           );
@@ -225,7 +236,7 @@ export default function PlacementScene() {
 
         {/* requests in flight, from the fully known trace: a dotted path from the user's row to the destination, and the dot on it */}
         {final.pods.map((p) => {
-          const from = right(actionOf(p));
+          const from = exit(actionOf(p));
           const slot = slotOf(p);
           const to = slot ? entry(slot) : { x: trayLineOf(p).x - 10, y: trayLineOf(p).y };
           const t0 = p.requestedAt;
@@ -266,11 +277,11 @@ export default function PlacementScene() {
 }
 
 /** Where volume `name` sits under a pod slot: two chips per row, a lone last chip takes the full width. */
-function chipRect(slot: Rect, volumes: Volume[], name: Volume['name']): Rect {
+function chipRect(slot: Rect, volumes: Volume[], name: Volume['name'], perRow: number): Rect {
   const i = volumes.findIndex((v) => v.name === name);
-  const row = Math.floor(i / CHIPS_PER_ROW);
-  const col = i % CHIPS_PER_ROW;
-  const inRow = Math.min(CHIPS_PER_ROW, volumes.length - row * CHIPS_PER_ROW);
+  const row = Math.floor(i / perRow);
+  const col = i % perRow;
+  const inRow = Math.min(perRow, volumes.length - row * perRow);
   const w = (slot.w - CHIP_GAP * (inRow - 1)) / inRow;
   return { x: slot.x + col * (w + CHIP_GAP), y: slot.y + slot.h + CHIP_GAP + row * (CHIP_H + CHIP_GAP), w, h: CHIP_H };
 }
