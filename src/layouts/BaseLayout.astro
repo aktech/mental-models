@@ -22,33 +22,53 @@ const { title, description } = Astro.props;
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <script is:inline>
-      try {
-        const t = localStorage.getItem('theme');
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
-      } catch {}
+      // Resolve the theme before first paint: an explicit choice wins,
+      // otherwise follow the OS. The toggle button and the CSS both read
+      // data-theme, so this is the one place the rule lives.
+      (function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem('theme');
+        } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
     </script>
   </head>
   <body>
-    <header class="flex items-baseline justify-between px-5 pt-5 pb-12 sm:px-8">
+    <header class="flex items-center justify-between px-5 pt-4 pb-10 sm:px-8">
       <a href="/" class="site-name">mental models</a>
-      <button id="theme-toggle" type="button" class="meta cursor-pointer" aria-label="Toggle colour scheme">
-        theme
+      <button id="theme-toggle" type="button" class="theme-btn" aria-label="Toggle light and dark mode">
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+        </svg>
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
       </button>
     </header>
     <main class="px-5 pb-24">
       <slot />
     </main>
     <script>
+      const root = document.documentElement;
       const btn = document.getElementById('theme-toggle');
       btn?.addEventListener('click', () => {
-        const root = document.documentElement;
-        const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const current = root.dataset.theme ?? (dark ? 'dark' : 'light');
-        const next = current === 'dark' ? 'light' : 'dark';
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
         root.dataset.theme = next;
         try {
           localStorage.setItem('theme', next);
         } catch {}
+      });
+      // Follow the OS until the reader picks a side, then stop.
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        try {
+          if (localStorage.getItem('theme')) return;
+        } catch {}
+        root.dataset.theme = e.matches ? 'dark' : 'light';
       });
     </script>
   </body>

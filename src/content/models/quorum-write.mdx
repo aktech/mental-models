@@ -7,7 +7,7 @@ import QuorumWriteScene from '../../components/scenes/QuorumWriteScene';
 
 One client, one coordinator, a handful of replicas. The client sends a write. The coordinator fans it out to every replica at once. Each replica writes to its own disk, at its own speed, and sends an ack back. The coordinator replies to the client as soon as it holds the number of acks you asked for.
 
-Time runs downward. The orange line is now.
+Time runs downward. The amber line is now.
 
 <QuorumWriteScene client:load />
 

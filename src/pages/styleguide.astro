@@ -4,8 +4,8 @@ import { contrastRatio } from '../lib/contrast';
 
 // Same hex values as tokens.css. Contrast is computed, not asserted by hand.
 const themes = [
-  { name: 'light', bg: '#f6f3ec', fg: '#1c1b19', a1: '#b54314', a2: '#1f5c86' },
-  { name: 'dark', bg: '#171614', fg: '#eae6de', a1: '#f0895a', a2: '#7fb3df' },
+  { name: 'light', bg: '#f7f7f2', fg: '#101a31', a1: '#8a5b00', a2: '#245de8' },
+  { name: 'dark', bg: '#091326', fg: '#f5f5ed', a1: '#f3cb69', a2: '#77a3ff' },
 ] as const;
 
 const steps = [70, 50, 30, 15, 8] as const;
@@ -17,7 +17,7 @@ const accentSteps = [70, 40, 15] as const;
     <p class="meta">styleguide</p>
 
     <h1 class="text-[length:var(--fs-2xl)]">Why your write waits for the slowest disk</h1>
-    <p class="meta">h1 · Space Grotesk 500 · var(--fs-2xl) = clamp(36px, 52px) · lh 1.1</p>
+    <p class="meta">h1 · Space Grotesk 600 · var(--fs-2xl) = clamp(36px, 52px) · lh 1.1 · tracking -0.04em</p>
 
     <p class="lead">
       A write is only as fast as the k-th replica to answer, and k is a number you chose.
@@ -33,7 +33,7 @@ const accentSteps = [70, 40, 15] as const;
     <p class="meta">body · Space Grotesk · 18px · lh 1.7 · measure 68ch</p>
 
     <h2>The k-th fastest, not the mean</h2>
-    <p class="meta">h2 · Space Grotesk 500 · 28px</p>
+    <p class="meta">h2 · Space Grotesk 600 · 28px</p>
 
     <blockquote>One slow disk poisons everything when you need all of the acks.</blockquote>
     <p class="meta">pull quote · Instrument Serif italic · 28px · 1px accent rule</p>

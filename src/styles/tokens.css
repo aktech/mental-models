@@ -9,10 +9,10 @@
   color-scheme: light dark;
 
   /* ---- colour ---- */
-  --bg: light-dark(#f6f3ec, #171614);
-  --fg: light-dark(#1c1b19, #eae6de);
-  --accent-1: light-dark(#b54314, #f0895a); /* ember: the thing in flight */
-  --accent-2: light-dark(#1f5c86, #7fb3df); /* tide: the thing at rest, acknowledged */
+  --bg: light-dark(#f7f7f2, #091326);
+  --fg: light-dark(#101a31, #f5f5ed);
+  --accent-1: light-dark(#8a5b00, #f3cb69); /* amber: the thing in flight */
+  --accent-2: light-dark(#245de8, #77a3ff); /* blue: the thing at rest, acknowledged */
 
   --fg-70: color-mix(in srgb, var(--fg) 70%, transparent);
   --fg-50: color-mix(in srgb, var(--fg) 50%, transparent);
