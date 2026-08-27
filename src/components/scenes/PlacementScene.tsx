@@ -62,7 +62,8 @@ export default function PlacementScene() {
     () => ({ mode, nodes, slots, users, apps, travelMs: TRAVEL_MS, createMs: CREATE_MS, attachMs: ATTACH_MS, startMs: START_MS, thinkMs: THINK_MS }),
     [mode, nodes, slots, users, apps],
   );
-  const sim = useSimulation(placement, params);
+  // 0.25x: the full run is ~9 s of model time, so about 35 s of watching.
+  const sim = useSimulation(placement, params, { speed: 0.25 });
   const { ref, width } = useContainerWidth<HTMLDivElement>(640);
   const t = sim.t;
   const now = sim.state;
