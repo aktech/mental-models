@@ -7,10 +7,11 @@ import '@fontsource/fira-sans/400-italic.css';
 import '@fontsource/fira-sans/500.css';
 import '@fontsource/fira-sans/600.css';
 import '../styles/global.css';
-import { withBase } from '../lib/url';
-import { ogPages, ogSlugForPath, SITE_NAME, SITE_TAGLINE } from '../lib/pages';
+import { ogSlugForPath, withBase } from '../lib/url';
+import { ogPages, REPO_URL, SITE_NAME, SITE_TAGLINE } from '../lib/pages';
 
 const commit = __COMMIT__;
+const commitUrl = `${REPO_URL}/commit/${__COMMIT_SHA__}`;
 
 interface Props {
   title: string;
@@ -101,7 +102,11 @@ const isEntry = Astro.url.pathname.includes('/models/');
         All content copyright &copy; <b>A</b>mit <b>K</b>umar unless otherwise noted. Licensed under{' '}
         <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a>. Find me on{' '}
         <a href="https://github.com/aktech">GitHub</a>, or shoot me an <a href="mailto:dtu.amit@gmail.com">email</a>.
-        {commit && <span class="site-footer-commit"> ({commit})</span>}
+        {commit && (
+          <span class="site-footer-commit">
+            {' '}(<a href={commitUrl}>{commit}</a>)
+          </span>
+        )}
       </p>
     </footer>
     <script>

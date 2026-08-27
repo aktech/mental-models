@@ -199,6 +199,10 @@
   font-family: var(--font-mono);
   opacity: 0.6;
 }
+.site-footer-commit a {
+  color: inherit;
+  text-decoration: none;
+}
 
 /* Background note under an entry's lead: a plain quote in the body type. */
 .prose blockquote.background {

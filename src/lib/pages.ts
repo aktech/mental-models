@@ -7,6 +7,7 @@ import type { OgCard } from './og';
 */
 
 export const SITE_NAME = 'mental models';
+export const REPO_URL = 'https://github.com/aktech/mental-models';
 export const SITE_TAGLINE = 'A collection of mental models, mostly backend and infra, and whatever else I need to hold in my head.';
 
 export interface OgPage extends OgCard {
@@ -20,12 +21,4 @@ export async function ogPages(): Promise<OgPage[]> {
     { slug: 'about', title: 'About', description: SITE_TAGLINE },
     ...entries.map((e) => ({ slug: e.id, title: e.data.title, description: e.data.description })),
   ];
-}
-
-/** The card slug for a path under the site base: "" -> index, "about" -> about, "models/x" -> x. */
-export function ogSlugForPath(pathname: string, base: string): string {
-  const rel = pathname.replace(base.replace(/\/$/, ''), '').replace(/^\/|\/$/g, '');
-  if (rel === '') return 'index';
-  const parts = rel.split('/');
-  return parts[0] === 'models' && parts[1] ? parts[1] : parts[0]!;
 }
